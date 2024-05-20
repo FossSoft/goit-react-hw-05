@@ -2,7 +2,7 @@ import axios from "axios";
 const options = {
   headers: {
     Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNmEzNWQ1NjBkN2U1ZDhjNTA4NTYyMjAyNzBlODdlMyIsInN1YiI6IjY2NDdhN2ZiMTVhYWY1OWE0ZDRjNDFjYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6JML1KJH76769rhcsqZBGTiU8cdwezMTEeOCHZyworo",
+      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMmMyZTk4YTY4YmM0MmYwMTEyMjI3NjBmMDY3MTAyMyIsInN1YiI6IjY2MmEzYWUwYmYzMWYyMDA5YmUzNDI5YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.81a9ukE9LW2yHS9NbJ8zFTGgIuZmtfWq9Vz5SXUEoos",
   },
 };
 
