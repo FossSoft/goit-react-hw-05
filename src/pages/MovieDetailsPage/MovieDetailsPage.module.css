@@ -6,7 +6,7 @@
   margin-bottom: 20px;
   font-size: 15px;
   border-radius: 10px;
-  color: rgb(255, 233, 107);
+  color: rgb(187, 79, 236);
   border: solid 1px;
   text-align: center;
   padding: 10px;
@@ -14,7 +14,7 @@
 
 .homeLink:hover {
   color: #fff;
-  background-color: rgb(255, 233, 107);
+  background-color: rgb(187, 79, 236);
 }
 
 .list {
@@ -30,7 +30,7 @@
   font-weight: bold;
   font-size: 15px;
   border-radius: 10px;
-  color: rgb(255, 233, 107);
+  color: rgb(187, 79, 236);
   border: solid 1px;
   text-align: center;
   padding: 10px;
@@ -38,5 +38,5 @@
 
 .link:hover {
   color: #fff;
-  background-color: rgb(255, 233, 107);
+  background-color: rgb(187, 79, 236);
 }

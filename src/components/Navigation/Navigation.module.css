@@ -1,22 +1,22 @@
 .container {
-    margin-bottom: 60px;
+  margin-bottom: 60px;
 }
 
 .navList {
-    display: flex;
-    border-bottom: 1px solid rgb(107, 107, 255);
+  display: flex;
+  border-bottom: 1px solid rgb(187, 79, 236);
 }
 
 .link {
-    display: block;
-    font-size: 15px;
-    text-decoration: none;
-    border-radius: 10px 10px 0 0;
-    padding: 16px;
-    color: rgb(107, 107, 255);
+  display: block;
+  font-size: 15px;
+  text-decoration: none;
+  border-radius: 10px 10px 0 0;
+  padding: 16px;
+  color: rgb(187, 79, 236);
 }
 
 .active {
-    color: #fff;
-    background-color: rgb(107, 107, 255);
+  color: #fff;
+  background-color: rgb(187, 79, 236);
 }
