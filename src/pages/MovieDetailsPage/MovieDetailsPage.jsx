@@ -1,74 +1,63 @@
-import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
-import { Suspense, useEffect, useRef, useState } from 'react';
-import css from './MovieDetailsPage.module.css';
-import { getMovieByid } from '../../movies-api';
+import { useState, useEffect, useRef } from 'react';
+import { Outlet, useParams, useLocation } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { getMovieById } from '../../movies-api';
+import { Suspense } from 'react';
+import MovieInfo from '../../components/MovieInfo/MovieInfo';
+import Error from '../../components/Error/Error';
+import css from './MovieDetailsPage.module.css'
+
 export default function MovieDetailsPage() {
-  const { movieId } = useParams();
-  const [movie, setMovie] = useState(null);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const location = useLocation();
-  const backLinkURLRef = useRef(location.state ?? '/');
+    const { movieId } = useParams();
+    const location = useLocation();
+    const linkRef = useRef(location.state);
+    const [movie, setMovie] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
 
-  useEffect(() => {
-    async function fetchMovieById() {
-      try {
-        setError(false);
-        setLoading(true);
-        const data = await getMovieByid(movieId);
-        setMovie(data);
-      } catch (error) {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchMovieById();
-  }, [movieId]);
+    useEffect(() => {
+        const fetchMovieById = async () => {
+            try {
+                setLoading(true);
+                const data = await getMovieById(movieId);
+                setMovie(data);
+            } catch (error) {
+                setError(true);
+                setMovie(null);
+            } finally {
+                setLoading(false);
+            }
+        }
 
-  return (
-    <div >
-      <Link to={backLinkURLRef.current} className={css.backLink}>
-        Go back
-      </Link>
-      {loading && <b>Loading information about movie</b>}
-      {error && <b>Sorry, we have some troubles</b>}
-      {movie && (
-        <div className={css.container}>
-          <img
-            src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
-            alt="movie poster"
-          />
-          <div>
-            <h2>{movie.original_title}</h2>
-            <p>User score: {movie.vote_average * 10}%</p>
-            <h2>Overview</h2>
-            <p>{movie.overview}</p>
+        fetchMovieById();
+    }, [movieId])
 
-            <h2>Genres</h2>
-            <ul>
-              {movie.genres.map(el => (
-                <li key={el.id}>{el.name}</li>
-              ))}
-            </ul>
-          </div>
+    return (
+        <div>
+            <Link to={linkRef.current ?? '/'} className={css.homeLink}>Go back</Link>
+
+            {loading && <p>Page is loading. Please wait...</p>}
+            {error && <Error />}
+
+            {movie &&
+                <div>
+                    <MovieInfo movie={movie} />
+                    <h3>Additional information:</h3>
+                    <ul className={css.list}>
+                        <li className={css.listItem}>
+                            <Link to='cast' className={css.link}>Cast</Link>
+                        </li>
+                        <li className={css.listItem}>
+                            <Link to='reviews' className={css.link}>Reviews</Link>
+                        </li>
+                    </ul>
+
+                    <Suspense fallback={<div>Loading subpage...</div>}>
+                        <Outlet />
+                    </Suspense>
+                </div>
+            }
         </div>
-      )}
-      <hr />
-      <p>Additional information</p>
-      <ul>
-        <li>
-          <Link to="cast">Cast</Link>
-        </li>
-        <li>
-          <Link to="reviews">Reviews</Link>
-        </li>
-      </ul>
-
-      <Suspense fallback={<b>Loading nested route...</b>}>
-        <Outlet />
-      </Suspense>
-    </div>
-  );
+    )
 }

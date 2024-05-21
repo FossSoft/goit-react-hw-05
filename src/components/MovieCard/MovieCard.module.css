@@ -1,7 +1,5 @@
-.list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.linkBox {
+    margin-bottom: 10px;
 }
 
 .link {

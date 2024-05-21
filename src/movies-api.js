@@ -1,41 +1,43 @@
 import axios from "axios";
+
+axios.defaults.baseURL = "https://api.themoviedb.org/3/";
+
 const options = {
   headers: {
     Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMmMyZTk4YTY4YmM0MmYwMTEyMjI3NjBmMDY3MTAyMyIsInN1YiI6IjY2MmEzYWUwYmYzMWYyMDA5YmUzNDI5YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.81a9ukE9LW2yHS9NbJ8zFTGgIuZmtfWq9Vz5SXUEoos",
+      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNmEzNWQ1NjBkN2U1ZDhjNTA4NTYyMjAyNzBlODdlMyIsInN1YiI6IjY2NDdhN2ZiMTVhYWY1OWE0ZDRjNDFjYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6JML1KJH76769rhcsqZBGTiU8cdwezMTEeOCHZyworo",
   },
 };
 
-export async function getPopularMovies() {
-  const url = "https://api.themoviedb.org/3/trending/movie/day?language=en-US";
-  const responce = await axios.get(url, options);
-  return responce.data.results;
-  // console.log(responce.data.results)
-}
+export const getTrendingMovies = async () => {
+  const response = await axios.get(
+    "trending/movie/day?language=en-US",
+    options
+  );
+  return response.data.results;
+};
 
-export async function getMovie(movie) {
-  const url = `https://api.themoviedb.org/3/search/movie?query=${movie}&include_adult=false&language=en-US&page=1`;
-  const responce = await axios.get(url, options);
+export const getMovieById = async (movieId) => {
+  const response = await axios.get(`movie/${movieId}?language=en-US`, options);
+  return response.data;
+};
 
-  return responce.data.results;
-}
+export const getMovieCredits = async (movieId) => {
+  const response = await axios.get(`movie/${movieId}/credits`, options);
+  return response.data;
+};
 
-export async function getMovieByid(movieId) {
-  const url = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
-  const responce = await axios.get(url, options);
-  return responce.data;
-}
+export const getMovieReviews = async (movieId) => {
+  const response = await axios.get(`movie/${movieId}/reviews`, options);
+  return response.data;
+};
 
-export async function getMovieCast(movieId) {
-  const url = `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`;
-  const responce = await axios.get(url, options);
-
-  return responce.data.cast;
-}
-
-export async function getMovieReviews(movieId) {
-  const url = `https://api.themoviedb.org/3/movie/${movieId}/reviews?language=en-US&page=1`;
-  const responce = await axios.get(url, options);
-
-  return responce.data.results;
-}
+export const getMovieByQuery = async (searchQuery) => {
+  const response = await axios.get(
+    `search/movie?query=${searchQuery}&page=1`,
+    options,
+    {}
+  );
+  console.log(response.data.results);
+  return response.data.results;
+};

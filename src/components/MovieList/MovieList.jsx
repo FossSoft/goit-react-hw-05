@@ -1,18 +1,18 @@
-// import MovieReviews from '../MovieReviews/MovieReviews';
-import { Link, useLocation } from 'react-router-dom';
-import css from './MovieList.module.css';
-export default function MovieList({ data }) {
+import MovieCard from "../MovieCard/MovieCard"
+import { useLocation } from "react-router-dom"
+
+export default function MovieList({ movies }) {
+
     const location = useLocation();
+
     return (
-    <ul className={css.list}>
-      {data.map(el => (
-        <li key={el.id}>
-          {/* <MovieReviews data={el}/> */}
-          <Link to={`/movies/${el.id}`} state={location}>
-            <div>{el.title}</div>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
+        <ul>
+            {movies.map((movie) => {
+                return <li key={movie.id}>
+                    <MovieCard movie={movie} location={location} />
+                </li>
+            })}
+        </ul>
+    )
 }
+

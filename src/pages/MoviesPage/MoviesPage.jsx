@@ -1,45 +1,59 @@
-// import css from "./MoviesPage.module.css"
-import { useEffect, useState } from "react";
-import MovieSearchForm from "../../components/MovieSearchForm/MovieSearchForm";
-import { getMovie } from "../../movies-api";
-import MovieList from "../../components/MovieList/MovieList";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
-export default function MoviesPage(){
+import SearchForm from "../../components/SearchForm/SearchForm"
+import { getMovieByQuery } from "../../movies-api";
+import css from './MoviesPage.module.css'
 
-    const [movies, setMovies] = useState([])
+export default function MoviesPage() {
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    const query = searchParams.get('query') ?? '';
+
+    const [list, setList] = useState([]);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [query, setQuery] = useState('')
-    const [searchParams, setSearchParams] = useSearchParams();
-    const movieParam = searchParams.get("query") ?? ""
+
+    const handleSearch = (newQuery) => {
+        setSearchParams({ query: newQuery });
+    }
+
+    const handleError = (errorState) => {
+        setError(errorState);
+    }
 
     useEffect(() => {
-        async function fetchNewMovie(){
+        if (query === '') {
+            return;
+        }
+        const fetchMovieByQuery = async () => {
             try {
-                setError(false);
                 setLoading(true);
-                const data = await getMovie(movieParam)
-                setMovies(data);
+                const data = await getMovieByQuery(query);
+                setList(data);
             } catch (error) {
-              setError(true)  
+                setError(true);
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
         }
-        fetchNewMovie()
-    }, [movieParam, query])
 
-    const handleSearchMovie = newMovie => {
-        searchParams.set("query", newMovie);
-        setSearchParams(searchParams);
-        setQuery(newMovie);
-    }
-    return(
+        fetchMovieByQuery();
+    }, [query])
+
+    return (
         <div>
-            <MovieSearchForm onSearch={handleSearchMovie}/>
-            {error && <p>Sorry, we have some troubles</p>}
-            {loading && <p>Loading movies</p>}
-            {movies.length > 0 && <MovieList data={movies}/>}
-        </div>
+            <SearchForm onSubmit={handleSearch} onError={handleError} />
+            <ul className={css.list}>
+                {
+                    list.map((item) => {
+                        return (
+                            <li key={item.id} className={css.listItem}>
+                                <Link to={`/movies/${item.id}`} className={css.link}>{item.title}</Link>
+                            </li>
+                        )
+                    })}
+            </ul>
+        </div >
     )
 }

@@ -1,36 +1,42 @@
-import { useEffect, useState } from "react";
-// import css from "./HomePage.module.css";
 import MovieList from "../../components/MovieList/MovieList"
-import { getPopularMovies } from "../../movies-api";
+import { getTrendingMovies } from '../../movies-api';
+import { useState, useEffect } from 'react';
+import css from './HomePage.module.css'
 
-export default function HomePage(){
-    const [movies, setMovies] =useState([]);
+export default function HomePage() {
+
+    const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 
+
     useEffect(() => {
-        async function fetchMovies(){
+        const getMovies = async () => {
             try {
                 setLoading(true);
-                const data = await getPopularMovies();
+                const data = await getTrendingMovies();
                 setMovies(data);
             } catch (error) {
-                setError(true)
+                setError(true);
+                alert('Error occured! Please try again.')
+                setMovies([]);
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
-        }
-        fetchMovies()
-    }, [])
+        };
 
-    return(
-        <>
-        <h2>Trending today</h2>
+        getMovies();
+    }, []);
 
-        {loading && <b>Loading payments...</b>}
-        {error && <b>Sorry, we hame some troubles</b>}
-        {movies.length > 0 && <MovieList data={movies}/>}
-
-        </>
+    return (
+        <div>
+            {loading && <b>Loading movies. Please wait...</b>}
+            {movies.length > 0 &&
+                <div>
+                    <h1 className={css.title}>Trending today:</h1>
+                    <MovieList movies={movies} />
+                </div>
+            }
+        </div>
     )
 }
