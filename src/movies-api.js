@@ -1,7 +1,4 @@
 import axios from "axios";
-
-axios.defaults.baseURL = "https://api.themoviedb.org/3/";
-
 const options = {
   headers: {
     Authorization:
@@ -9,35 +6,36 @@ const options = {
   },
 };
 
-export const getTrendingMovies = async () => {
-  const response = await axios.get(
-    "trending/movie/day?language=en-US",
-    options
-  );
-  return response.data.results;
-};
+export async function getPopularMovies() {
+  const url = "https://api.themoviedb.org/3/trending/movie/day?language=en-US";
+  const responce = await axios.get(url, options);
+  return responce.data.results;
+  // console.log(responce.data.results)
+}
 
-export const getMovieById = async (movieId) => {
-  const response = await axios.get(`movie/${movieId}?language=en-US`, options);
-  return response.data;
-};
+export async function getMovie(movie) {
+  const url = `https://api.themoviedb.org/3/search/movie?query=${movie}&include_adult=false&language=en-US&page=1`;
+  const responce = await axios.get(url, options);
 
-export const getMovieCredits = async (movieId) => {
-  const response = await axios.get(`movie/${movieId}/credits`, options);
-  return response.data;
-};
+  return responce.data.results;
+}
 
-export const getMovieReviews = async (movieId) => {
-  const response = await axios.get(`movie/${movieId}/reviews`, options);
-  return response.data;
-};
+export async function getMovieByid(movieId) {
+  const url = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
+  const responce = await axios.get(url, options);
+  return responce.data;
+}
 
-export const getMovieByQuery = async (searchQuery) => {
-  const response = await axios.get(
-    `search/movie?query=${searchQuery}&page=1`,
-    options,
-    {}
-  );
-  console.log(response.data.results);
-  return response.data.results;
-};
+export async function getMovieCast(movieId) {
+  const url = `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`;
+  const responce = await axios.get(url, options);
+
+  return responce.data.cast;
+}
+
+export async function getMovieReviews(movieId) {
+  const url = `https://api.themoviedb.org/3/movie/${movieId}/reviews?language=en-US&page=1`;
+  const responce = await axios.get(url, options);
+
+  return responce.data.results;
+}

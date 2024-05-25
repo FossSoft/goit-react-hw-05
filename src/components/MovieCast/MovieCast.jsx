@@ -1,48 +1,44 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getMovieCredits } from "../../movies-api"
-import Error from '../Error/Error';
-import css from './MovieCast.module.css'
+import { getMovieCast } from '../../movies-api';
 
 export default function MovieCast() {
+  const { movieId } = useParams();
+  const [cast, setCast] = useState(null);
+  const [error, setError] = useState(false);
 
-    const { movieId } = useParams();
-    const [movieCredits, setMovieCredits] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
+  useEffect(() => {
+    async function fetchMovieCast() {
+      try {
+        setError(false);
+        const data = await getMovieCast(movieId);
+        setCast(data);
+      } catch (error) {
+        setError(true);
+      }
+    }
+    fetchMovieCast();
+  }, [movieId]);
 
-    useEffect(() => {
-        const fetchMovieCreditsById = async () => {
-            try {
-                setLoading(true);
-                const data = await getMovieCredits(movieId);
-                setMovieCredits(data.cast);
-            } catch (error) {
-                setError(true);
-                setMovieCredits([]);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchMovieCreditsById();
-    }, [movieId])
-
-    return (
-        <div>
-            {loading && <p>Cast list is loading. Please wait...</p>}
-
-            {error && <Error />}
-
-            <ul className={css.list}>
-                {movieCredits.map(({ id, name, profile_path, character }) => {
-                    return <li key={id} className={css.listItem}>
-                        <img src={`https://image.tmdb.org/t/p/w200/${profile_path}`} alt={name} />
-                        <p className={css.text}>{name}</p>
-                        <p className={css.text}>Character: {character}</p>
-                    </li>
-                })}
-            </ul>
-        </div>
-    )
+  return (
+    <div>
+      {error && <p>Sorry, we have some troubles</p>}
+      {cast && cast.length > 0 ? (
+        <ul>
+          {cast.map(actor => (
+            <li key={actor.id}>
+              <img
+                src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
+                alt="actor photo"
+              />
+              <p>{actor.name}</p>
+              <p>Character: {actor.character}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>We did not find any information about the actors.</p>
+      )}
+    </div>
+  );
 }

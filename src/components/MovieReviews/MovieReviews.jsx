@@ -1,47 +1,39 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { getMovieReviews } from '../../movies-api';
-import Error from '../Error/Error';
-import css from './MovieReviews.module.css'
+// import css from './MovieReviews.module.css';
+
+import { useEffect, useState } from "react";
+import { useParams} from "react-router-dom";
+import { getMovieReviews } from "../../movies-api";
+import { nanoid } from "nanoid";
 
 export default function MovieReviews() {
-
     const { movieId } = useParams();
-    const [movieReviews, setMovieReviews] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [reviews, setReviews] = useState(null);
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        const fetchMovieCreditsById = async () => {
+        async function fetchMovieReviews(){
             try {
-                setLoading(true);
+                setError(false)
                 const data = await getMovieReviews(movieId);
-                setMovieReviews(data.results);
+                setReviews(data);
             } catch (error) {
-                setError(true);
-                setMovieReviews([]);
-            } finally {
-                setLoading(false);
+                setError(true)
             }
         }
-
-        fetchMovieCreditsById();
+        fetchMovieReviews()
     }, [movieId])
-
-    return (
-        <div>
-            {loading && <p>Reviews are loading. Please wait...</p>}
-
-            {error && <Error />}
-
-            <ul className={css.list}>
-                {movieReviews.map(({ id, author, content }) => {
-                    return <li key={id} className={css.listItem}>
-                        <p className={css.title}>Author: {author}</p>
-                        <p className={css.text}>{content}</p>
-                    </li>
-                })}
-            </ul>
-        </div>
-    )
+  return (<div>
+    {error && <div>Sorry we have some troubles</div>}
+    {reviews !== null && reviews.length === 0 && <p>There were no reviews.</p>}
+    {reviews && reviews.length > 0 && <ul>
+        {reviews.map(review => (
+            <li key={nanoid()}>
+                <h3>Author: {review.author}</h3>
+                <p>{review.content}</p>
+            </li>
+        ))}    
+    </ul>}
+  </div>
+    
+  )
 }
